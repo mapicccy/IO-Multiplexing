@@ -22,9 +22,9 @@
  第二层循环结束之后，第一层循环还需做一些判断，如果找到可用文件描述符、超时、当前进程需要处理信号，则退出轮询，如果当前为超时而且也没有找到可用的文件描述符，将当前进程状态设置为TASK_INTERRUPTIBLE阻塞。<br/>
  结束轮询之后调用poll_freewait释放等待队列。
  - 调用poll_select_copy_remaining，将剩余时间传给用户空间。<br/>
-## 二、 poll内核实现
+## 二、 poll内核实现 ##
 虽然poll内核实现方式不同（poll是通过poll_list结构保存需要遍历的文件描述符），但是原理和select一样，这里略过不谈。<br/>
-## 三、 epoll内核实现
+## 三、 epoll内核实现 ##
 1. epoll实现被分成了三个系统调用，分别是epoll_create、epoll_ctl、epoll_wait，它们的入口分别是：
  ![](select/epoll1.jpg)![](select/epoll2.jpg)![](select/epoll3.jpg)![](select/epoll4.jpg)![](select/epoll5.jpg)![](select/epoll6.jpg)![](select/epoll7.jpg)
 2. 实现原理：
