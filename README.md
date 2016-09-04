@@ -21,9 +21,9 @@
  在第二层内层循环中，通过bit控制每次查找all_bits的一位。当找到为1的那一位说明第一层循环中当前i描述符已经准备好，通过fdget(i)获得该文件的文件对象，同时如果文件驱动定义了poll函数，就把当前的文件描述符绑定在poll_initwait初始化的一个阻塞队列上，并将该阻塞队列设置为该文件驱动的阻塞队列。到目前为止，内核将当前进程挂在了已经准备好的文件描述符的文件的阻塞队列上，**注意**，此时的进程不一定被阻塞。第二层循环剩下的工作就是找到为1的那一位的文件描述符到底是输入文件描述符还是输出文件描述符或者是异常文件描述符，并将统计准备好文件描述符个数变量retval++。<br/>
  第二层循环结束之后，第一层循环还需做一些判断，如果找到可用文件描述符、超时、当前进程需要处理信号，则退出轮询，如果当前为超时而且也没有找到可用的文件描述符，将当前进程状态设置为TASK_INTERRUPTIBLE阻塞。<br/>
  结束轮询之后调用poll_freewait释放等待队列。
- - 调用poll_select_copy_remaining，将剩余时间传给用户空间。
+ - 调用poll_select_copy_remaining，将剩余时间传给用户空间。<br/>
 ## 二、 poll内核实现
-虽然poll内核实现方式不同（poll是通过poll_list结构保存需要遍历的文件描述符），但是原理和select一样，这里略过不谈。
+虽然poll内核实现方式不同（poll是通过poll_list结构保存需要遍历的文件描述符），但是原理和select一样，这里略过不谈。<br/>
 ## 三、 epoll内核实现
 1. epoll实现被分成了三个系统调用，分别是epoll_create、epoll_ctl、epoll_wait，它们的入口分别是：
  ![](select/epoll1.jpg)![](select/epoll2.jpg)![](select/epoll3.jpg)![](select/epoll4.jpg)![](select/epoll5.jpg)![](select/epoll6.jpg)![](select/epoll7.jpg)
